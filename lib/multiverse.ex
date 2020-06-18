@@ -65,29 +65,11 @@ defmodule Multiverse do
     gates =
       config
       |> Keyword.get(:gates, [])
-      |> enshure_changes_loaded!()
       |> sort_gates(adapter)
 
     config = Keyword.put(config, :gates, gates)
 
     %{adapter: adapter, version_header: version_header, gates: gates, adapter_config: config}
-  end
-
-  defp enshure_changes_loaded!(gates) do
-    # credo:disable-for-lines:3
-    Enum.map(gates, fn {_version, changes} ->
-      Enum.map(changes, &enshure_change_loaded!/1)
-    end)
-
-    gates
-  end
-
-  defp enshure_change_loaded!(change_mod) do
-    unless Code.ensure_loaded?(change_mod) do
-      raise ArgumentError,
-            "change module #{inspect(change_mod)} was not compiled, " <>
-              "ensure it is correct and it is included as a project dependency"
-    end
   end
 
   defp sort_gates(gates, adapter) do

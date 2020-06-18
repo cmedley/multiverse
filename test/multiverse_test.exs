@@ -57,12 +57,6 @@ defmodule MultiverseTest do
       %{version_header: "custom-version-header"} = Multiverse.init(opts)
     end
 
-    test "raises when change is not loaded" do
-      assert_raise ArgumentError, ~r/NotLoadedChange was not compiled/, fn ->
-        Multiverse.init(default_version: :latest, gates: [{~D[2001-01-01], [NotLoadedChange]}])
-      end
-    end
-
     test "reads configuration from multiverse application environment" do
       env = [
         adapter: Multiverse.Adapters.ISODate,
